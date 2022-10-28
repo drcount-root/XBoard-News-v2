@@ -1,8 +1,21 @@
 import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
+import PropTypes from "prop-types";
 
 export default class News extends Component {
+  static defaultProps = {
+    country: "in",
+    pageSize: 8,
+    category: "general",
+  };
+
+  static propTypes = {
+    country: PropTypes.string,
+    pageSize: PropTypes.number,
+    category: PropTypes.string,
+  };
+
   constructor() {
     super();
     this.state = {
@@ -13,7 +26,7 @@ export default class News extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=503687fdc373417aa9ca64181278398e&page=1&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=503687fdc373417aa9ca64181278398e&page=1&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -28,7 +41,11 @@ export default class News extends Component {
   handlePreviousCLick = async () => {
     console.log("Previous");
 
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=503687fdc373417aa9ca64181278398e&page=${
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      this.props.country
+    }&category=${
+      this.props.category
+    }&apiKey=503687fdc373417aa9ca64181278398e&page=${
       this.state.page - 1
     }&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
@@ -54,7 +71,11 @@ export default class News extends Component {
     ) {
     }
 
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=503687fdc373417aa9ca64181278398e&page=${
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      this.props.country
+    }&category=${
+      this.props.category
+    }&apiKey=503687fdc373417aa9ca64181278398e&page=${
       this.state.page + 1
     }&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
@@ -70,26 +91,30 @@ export default class News extends Component {
 
   render() {
     return (
-      <div className="container my-3">
-        <h1 className="text-center my-5">NewsGalaxy - Top Headlines</h1>
+      <div className="container my-5">
+        <h1 className="text-center my-5">NewsBoard - Top Headlines</h1>
 
         {this.state.loading && <Spinner />}
 
         <div className="row">
-          {!this.state.loading && this.state.articles.map((element) => {
-            return (
-              <div className="col-md-4" key={element.url}>
-                <NewsItem
-                  title={element.title ? element.title : ""}
-                  description={element.description ? element.description : ""}
-                  imageUrl={element.urlToImage}
-                  newsUrl={element.url}
-                />
-              </div>
-            );
-          })}
+          {!this.state.loading &&
+            this.state.articles.map((element) => {
+              return (
+                <div className="col-md-4" key={element.url}>
+                  <NewsItem
+                    title={element.title ? element.title : ""}
+                    description={element.description ? element.description : ""}
+                    imageUrl={element.urlToImage}
+                    newsUrl={element.url}
+                    author={element.author}
+                    date={element.publishedAt}
+                    source={element.source.name}
+                  />
+                </div>
+              );
+            })}
         </div>
-        <div className="container d-flex justify-content-between">
+        <div className="container mt-5 d-flex justify-content-between">
           <button
             disabled={this.state.page <= 1}
             type="button"
