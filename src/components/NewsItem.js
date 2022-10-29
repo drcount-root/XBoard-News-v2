@@ -28,7 +28,7 @@ export default class NewsItem extends Component {
               // zIndex: "1",
               // border: '1px solid black',
               width: "100%",
-              marginTop: '-2px',
+              marginTop: '-5px',
               borderRadius: '0px'
             }}
           >

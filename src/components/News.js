@@ -16,17 +16,20 @@ export default class News extends Component {
     category: PropTypes.string,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       loading: false,
       page: 1,
     };
+    document.title = `${
+      this.props.category.charAt(0).toUpperCase() + this.props.category.slice(1)
+    } - NewsBoard`;
   }
 
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=503687fdc373417aa9ca64181278398e&page=1&pageSize=${this.props.pageSize}`;
+  async updateNews() {
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=503687fdc373417aa9ca64181278398e&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
@@ -38,61 +41,74 @@ export default class News extends Component {
     });
   }
 
+  async componentDidMount() {
+    this.updateNews();
+  }
+
   handlePreviousCLick = async () => {
     console.log("Previous");
 
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${
-      this.props.category
-    }&apiKey=503687fdc373417aa9ca64181278398e&page=${
-      this.state.page - 1
-    }&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    console.log(parsedData);
+    // let url = `https://newsapi.org/v2/top-headlines?country=${
+    //   this.props.country
+    // }&category=${
+    //   this.props.category
+    // }&apiKey=503687fdc373417aa9ca64181278398e&page=${
+    //   this.state.page - 1
+    // }&pageSize=${this.props.pageSize}`;
+    // this.setState({ loading: true });
+    // let data = await fetch(url);
+    // let parsedData = await data.json();
+    // console.log(parsedData);
 
-    this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
+    // this.setState({
+    //   page: this.state.page - 1,
+    //   articles: parsedData.articles,
+    //   loading: false,
+    // });
+    await this.setState({ page: this.state.page - 1 });
+    this.updateNews();
   };
 
   handleNextCLick = async () => {
     console.log("Next");
 
-    if (
-      !(
-        this.state.page + 1 >
-        Math.ceil(this.state.totalResults / this.props.pageSize)
-      )
-    ) {
-    }
+    // if (
+    //   !(
+    //     this.state.page + 1 >
+    //     Math.ceil(this.state.totalResults / this.props.pageSize)
+    //   )
+    // ) {
+    // }
 
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${
-      this.props.category
-    }&apiKey=503687fdc373417aa9ca64181278398e&page=${
-      this.state.page + 1
-    }&pageSize=${this.props.pageSize}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
+    // let url = `https://newsapi.org/v2/top-headlines?country=${
+    //   this.props.country
+    // }&category=${
+    //   this.props.category
+    // }&apiKey=503687fdc373417aa9ca64181278398e&page=${
+    //   this.state.page + 1
+    // }&pageSize=${this.props.pageSize}`;
+    // this.setState({ loading: true });
+    // let data = await fetch(url);
+    // let parsedData = await data.json();
 
-    this.setState({
-      page: this.state.page + 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
+    // this.setState({
+    //   page: this.state.page + 1,
+    //   articles: parsedData.articles,
+    //   loading: false,
+    // });
+    await this.setState({ page: this.state.page + 1 });
+    this.updateNews();
   };
 
   render() {
     return (
       <div className="container my-5">
-        <h1 className="text-center my-5">NewsBoard - Top Headlines</h1>
+        <h1 className="text-center my-5">
+          NewsBoard - Top{" "}
+          {this.props.category.charAt(0).toUpperCase() +
+            this.props.category.slice(1)}{" "}
+          Headlines
+        </h1>
 
         {this.state.loading && <Spinner />}
 
