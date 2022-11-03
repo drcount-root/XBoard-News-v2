@@ -6,7 +6,10 @@ export default class NewsItem extends Component {
       this.props;
     return (
       <div className="my-1">
-        <div className="card shadow" style={{ borderBottom: "7px solid #DC3545", height: '515px' }}>
+        <div
+          className="card shadow"
+          style={{ borderBottom: "7px solid #DC3545" }}
+        >
           <img
             src={
               imageUrl
@@ -18,22 +21,20 @@ export default class NewsItem extends Component {
             alt="..."
           />
 
-         
-
           <div className="card-body">
-          <span
-            className="position-absolute translate-middle badge bg-danger py-2"
-            style={{
-              left: "50%",
-              // zIndex: "1",
-              // border: '1px solid black',
-              width: "100%",
-              marginTop: '-5px',
-              borderRadius: '0px'
-            }}
-          >
-            {source}
-          </span>
+            <span
+              className="position-absolute translate-middle badge bg-danger py-2"
+              style={{
+                left: "50%",
+                // zIndex: "1",
+                // border: '1px solid black',
+                width: "100%",
+                marginTop: "-5px",
+                borderRadius: "0px",
+              }}
+            >
+              {source}
+            </span>
             <h5 className="card-title my-4">{title} . . .</h5>
             <p className="card-text">{description} . . .</p>
             <p className="card-text">

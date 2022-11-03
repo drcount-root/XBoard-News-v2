@@ -34,15 +34,19 @@ export default class News extends Component {
   }
 
   async updateNews() {
-    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=503687fdc373417aa9ca64181278398e&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    this.props.setProgress(10);
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
+    this.props.setProgress(30);
     let parsedData = await data.json();
+    this.props.setProgress(70);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
       loading: false,
     });
+    this.props.setProgress(100);
   }
   async componentDidMount() {
     this.updateNews();
@@ -62,9 +66,7 @@ export default class News extends Component {
     this.setState({ page: this.state.page + 1 });
     const url = `https://newsapi.org/v2/top-headlines?country=${
       this.props.country
-    }&category=${
-      this.props.category
-    }&apiKey=503687fdc373417aa9ca64181278398e&page=${
+    }&category=${this.props.category}&apiKey=${this.props.apiKey}&page=${
       this.state.page + 1
     }&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
@@ -100,11 +102,13 @@ export default class News extends Component {
                     <NewsItem
                       title={element.title ? element.title.slice(0, 65) : ""}
                       description={
-                        element.description ? element.description.slice(0, 88) : ""
+                        element.description
+                          ? element.description.slice(0, 88)
+                          : ""
                       }
                       imageUrl={element.urlToImage}
                       newsUrl={element.url}
-                      author={element.author}
+                      author={element.author ? element.author.slice(0, 55) : ""}
                       date={element.publishedAt}
                       source={element.source.name}
                     />
